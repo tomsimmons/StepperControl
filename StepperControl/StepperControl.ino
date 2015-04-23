@@ -59,7 +59,7 @@ void loop() {
     }
     else
     {
-      if (repetitions > 0)
+      if (repetitions > 0 || repetitions == -1)
       {
         // Incur delay if we are between reps at the origin
         if (repetitions+1 % 2 == 0) delay(delayAmt);
@@ -97,8 +97,8 @@ void loop() {
       // Number of reps
       repetitions = Serial.parseInt();
       // The repetition code in the main loop counts each rep as one movement,
-      //  so to count cycles we double the # of reps
-      reptitions = (repetitions * 2) - 1;
+      //  so to count cycles we double the # of reps (if not on repeat)
+      if (repetitions != -1) reptitions = (repetitions * 2) - 1;
       break;
     case 'd':
       // The delay amount, in ms

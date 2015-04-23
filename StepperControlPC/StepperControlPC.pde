@@ -19,12 +19,13 @@ boolean conn = false;
 int[] errors = {0,0,0,0};
 // The interface object
 ControlP5 cp5;
+// Boolean to control continuous repetitions
+boolean repeat = false;
 // Color value to indicate direction
 color counterColor = color(0,0,0);
 // Boolean to determine clockwise-ness
 boolean antiCW = false;
-// Para debuguir
-int counter = 0;
+
 
 void setup() {
   size(600, 320); // square canvas + space for color indication rectangle
@@ -64,6 +65,12 @@ void setup() {
      .setText("0")
      .setAutoClear(false)
      ;
+  // Continuous run checkbox
+  cp5.addCheckBox("checkBox")
+     .setPosition(305, 118)
+     .setSize(25,25)
+     .addItem("Continuous",0)
+     ;
   // Delay textbox
   cp5.addTextfield("delayEntry")
      .setPosition(95,170)
@@ -83,13 +90,13 @@ void setup() {
      ;
   // Submit button
   cp5.addBang("send")
-     .setPosition(420,110)
+     .setPosition(440,110)
      .setSize(80,40)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
      ;
   // Halt button
   cp5.addBang("halt")
-     .setPosition(420,170)
+     .setPosition(440,170)
      .setSize(80,40)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
      ;
@@ -150,6 +157,14 @@ void draw() {
 }
 
 
+// Event controller for continuous repetition
+public void checkBox(float[] a)
+{
+  //println(a[0]);
+  repeat = a[0] == 1.0 ? true : false; // If checked, repeat forever
+  cp5.get(Textfield.class,"repsEntry").setText("0"); // Reset text entry
+}
+
 // Event controller for the direction toggle switch
 public void clockwise(boolean cw)
 {
@@ -203,7 +218,9 @@ public void send()
   int repetitions;
   try
   {
-    repetitions = Integer.parseInt(cp5.get(Textfield.class,"repsEntry").getText());
+    // If we are set to repeat, send -1, else interpret the entry
+    repetitions = repeat ? -1 :
+                  Integer.parseInt(cp5.get(Textfield.class,"repsEntry").getText());
     errors[2] = 0;
   }
   catch (NumberFormatException e)
@@ -293,5 +310,8 @@ void drawText(boolean connStatus)
   text("counter-",20,250);
   fill(0xffffffff);
   text("clockwise",125,250);
+  
+  // Blank out Reps entry if on repeat
+  if (repeat) cp5.get(Textfield.class,"repsEntry").setText("-");
 }
 
