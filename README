@@ -1,0 +1,52 @@
+Stepper Motor Control
+
+Warning
+=======
+There is currently no soft stop for movements that go beyond the range of any
+particular setup. As a result, if one enters a distance to move that puts
+whatever the stepper motor drives into a position of danger, damage to person
+and property may result. Always double check measurements and clearance before
+making a movement.
+
+Usage
+=====
+This program is meant to be used in conjunction with the complementary Arduino
+code that controls the stepper motor itself. The control program communicates
+via serial link. The Arduino is assumed to be the first Serial connected device.
+
+Distance can be given in inches or centimeters. Currently, the program assumes
+a 20 threads/inch rod.
+
+Repetitions refers to the number of times a motion is repeated between the
+current position and the entered distance.
+
+Delay specifies the amount of time, in seconds, to wait in between repititions.
+If no repititions are specified, this delay refers to the amount of time before
+performing the initial movement.
+
+"Clockwise" in this sense refers to the spindle rotation when looking at the
+stepper motor from the rear.
+
+Accuracy
+========
+Conversions are performed for the distance units. Because the threaded rods are
+measured in inches, entering a metric unit can come with some loss of exact
+precision.
+
+With the current settings, each step is 1.8 degrees. This gives a resolution of
+0.00025".
+
+Timing resolution works best when limited to milliseconds. Most Arduino boards
+have microsecond granularity (down to 4 musec on most, 8musec on smaller units).
+Thus, the delay feature will work when supplied with numbers precise down to
+the millionth of a second, but note two caveats:
+1) The microsecond timer resets roughly every 70 minutes, leading to potentially
+inaccurate measurements.
+2) Straight from the Arduino documentation:
+   "Currently, the largest value that will produce an accurate delay is 16383."
+   --(http://www.arduino.cc/en/Reference/DelayMicroseconds)
+  
+
+License
+=======
+See the included LICENSE file for details
